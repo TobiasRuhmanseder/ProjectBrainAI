@@ -1,0 +1,22 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  host: localhost
+  port: 5432
+  username: projectbrain
+  password: projectbrain
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+
+development:
+  <<: *default
+  database: projectbrain_development
+
+test:
+  <<: *default
+  database: projectbrain_test
+
+production:
+  <<: *default
+  database: projectbrain_production
+  username: projectbrain
+  password: <%= ENV["PROJECTBRAIN_DATABASE_PASSWORD"] %>

@@ -1,0 +1,19 @@
+@use "../styles/theme";
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: light;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-family: var(--pb-font-sans);
+}
+
+body {
+  margin: 0;
+}

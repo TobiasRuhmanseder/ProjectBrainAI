@@ -1,0 +1,46 @@
+# macOS
+.DS_Store
+
+# Rails
+/.bundle
+/vendor/bundle
+/log/*
+/tmp/*
+!/log/.keep
+!/tmp/.keep
+/tmp/pids/*
+!/tmp/pids/.keep
+/storage/*
+!/storage/.keep
+/tmp/storage/*
+!/tmp/storage/.keep
+*.log
+
+# Secrets (never commit)
+/config/master.key
+/config/credentials/*.key
+.env
+.env.*
+
+# Assets & builds
+/public/assets
+/app/assets/builds/*
+!/app/assets/builds/.keep
+
+# Vite Ruby dev/test output
+/public/vite-dev
+/public/vite-test
+
+# Node
+/node_modules
+/yarn-error.log
+npm-debug.log*
+
+# IDE / tooling
+/.idea
+/.vscode/*
+!/.vscode/extensions.json
+.ruby-lsp
+
+# Test / coverage
+/coverage
