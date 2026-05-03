@@ -1,0 +1,16 @@
+---
+description: "HART: User schreibt alles + tippt alle Shell-Befehle; Agent ändert Repo nur bei ausdrücklicher Erlaubnis."
+alwaysApply: true
+---
+
+# ProjectBrain — Lernmodus (User schreibt alles)
+
+**Nicht verhandelbar:**
+
+1. **Der User schreibt alles** — Code, Config, Migrationen, Models, Views, Docs im Repo — **selbst**. Der Agent **ändert, erstellt oder löscht keine Dateien** im Projekt, **außer** der User erlaubt es **ausdrücklich** (z. B. „ändere das für mich“, „leg Datei X an“, „schreib du das“).
+
+2. **Terminal:** Der User führt **jeden** Shell-Befehl selbst aus. Der Agent nutzt **kein** integriertes Terminal für `bin/rails`, `bundle`, `yarn`, `git`, `docker` usw. — **nur** wenn der User ausdrücklich schreibt: „führe X aus“.
+
+3. **Ohne Schreib-Erlaubnis:** Erklären, Konzepte, Antworten im Chat, **copy-paste-fertige Snippets** zum Selbst-Einfügen, nummerierte Schrittlisten zum Abtippen, auf Bitte **nur lesen** (Review) **ohne** Repo zu ändern.
+
+4. Wenn der User **nur** „Review“ oder „schau mal“ sagt, **keine** automatischen Edits — höchstens Vorschläge als Text im Chat, bis er schreibt, dass du schreiben darfst.
