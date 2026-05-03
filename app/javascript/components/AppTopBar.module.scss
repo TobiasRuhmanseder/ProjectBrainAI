@@ -1,12 +1,12 @@
 .root {
-  border-bottom: 1px solid var(--pb-color-border);
-  background: var(--pb-color-surface);
+  border-bottom: 1px solid #e2e8f0;
+  background: #ffffff;
 }
 
 .inner {
   margin: 0 auto;
   display: flex;
-  max-width: var(--pb-layout-max-width);
+  max-width: 72rem;
   align-items: center;
   justify-content: space-between;
   padding: 1.25rem 1.5rem;
@@ -16,7 +16,7 @@
   font-size: 0.875rem;
   font-weight: 600;
   letter-spacing: -0.025em;
-  color: var(--pb-color-brand);
+  color: #0f172a;
 }
 
 .right {
@@ -32,19 +32,19 @@
   align-items: center;
   justify-content: center;
   border-radius: 9999px;
-  border: 1px solid var(--pb-color-border);
-  background: var(--pb-color-surface);
-  color: var(--pb-color-text-soft);
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  color: #334155;
   box-shadow: 0 1px 2px rgb(0 0 0 / 0.05);
   cursor: pointer;
   padding: 0;
 
   &:hover {
-    background: var(--pb-color-surface-subtle);
+    background: #f8fafc;
   }
 
   &:focus-visible {
-    outline: 2px solid var(--pb-color-focus-ring);
+    outline: 2px solid #0f172a;
     outline-offset: 2px;
   }
 }
@@ -57,5 +57,5 @@
 .company {
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--pb-color-text);
+  color: #0f172a;
 }

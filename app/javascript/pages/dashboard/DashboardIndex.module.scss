@@ -1,12 +1,12 @@
 .main {
   min-height: 100vh;
-  background: var(--pb-color-surface);
-  color: var(--pb-color-text);
+  background: #ffffff;
+  color: #0f172a;
 }
 
 .section {
   margin: 0 auto;
-  max-width: var(--pb-layout-max-width);
+  max-width: 72rem;
   padding: 2.5rem 1.5rem;
 }
 
@@ -21,7 +21,7 @@
   font-size: 1.875rem;
   font-weight: 600;
   letter-spacing: -0.025em;
-  color: var(--pb-color-text);
+  color: #0f172a;
 
   @media (min-width: 640px) {
     font-size: 2.25rem;
@@ -33,7 +33,7 @@
   max-width: 42rem;
   font-size: 0.875rem;
   line-height: 1.5rem;
-  color: var(--pb-color-text-muted);
+  color: #475569;
 
   @media (min-width: 640px) {
     font-size: 1rem;
@@ -42,7 +42,7 @@
 
 .leadStrong {
   font-weight: 500;
-  color: var(--pb-color-accent);
+  color: #0f172a;
 }
 
 .grid {

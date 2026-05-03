@@ -8,10 +8,8 @@
 
 html {
   color-scheme: light;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
-  font-family: var(--pb-font-sans);
+  font-family: ui-sans-serif, system-ui, -apple-system, blinkmacsystemfont, "Segoe UI", roboto,
+    helvetica, arial, "Apple Color Emoji", "Segoe UI Emoji", sans-serif;
 }
 
 body {
