@@ -1,0 +1,682 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>ProjectBrain AI — Calm</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --accent: #4F46E5;        /* Indigo */
+    --accent-soft: #EEF2FF;
+    --accent-ink: #312E81;
+    --bg: #FAFAF7;            /* warm off-white */
+    --surface: #FFFFFF;
+    --ink: #18181B;
+    --ink-2: #3F3F46;
+    --ink-3: #71717A;
+    --line: #E7E5E0;
+    --line-2: #F1EFEA;
+    --ok: #16A34A;
+    --warn: #D97706;
+    --hold: #6B7280;
+    --radius: 14px;
+    --radius-lg: 20px;
+    --shadow-sm: 0 1px 2px rgba(24,24,27,.04), 0 1px 1px rgba(24,24,27,.02);
+    --shadow-md: 0 1px 2px rgba(24,24,27,.04), 0 8px 24px -12px rgba(24,24,27,.10);
+    --font-sans: 'Geist', 'Inter', system-ui, sans-serif;
+    --font-display: 'Instrument Serif', 'Geist', serif;
+    --font-mono: 'Geist Mono', ui-monospace, monospace;
+  }
+  [data-theme="dark"]{
+    --bg: #0E0E10;
+    --surface: #16161A;
+    --ink: #F4F4F5;
+    --ink-2: #D4D4D8;
+    --ink-3: #A1A1AA;
+    --line: #27272A;
+    --line-2: #1F1F22;
+    --accent-soft: #1E1B4B;
+    --accent-ink: #C7D2FE;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,.4);
+    --shadow-md: 0 1px 2px rgba(0,0,0,.4), 0 12px 32px -16px rgba(0,0,0,.6);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:var(--font-sans);-webkit-font-smoothing:antialiased;font-feature-settings:"ss01","cv11"}
+  button{font:inherit;color:inherit}
+  a{color:inherit;text-decoration:none}
+
+  /* ------- App scaffold ------- */
+  .app{min-height:100vh;display:flex;flex-direction:column}
+  .topbar{
+    height:64px;display:flex;align-items:center;justify-content:space-between;
+    padding:0 32px;border-bottom:1px solid var(--line);background:var(--surface);
+  }
+  .brand{display:flex;align-items:center;gap:10px;font-weight:600;letter-spacing:-0.01em}
+  .brand-mark{
+    width:28px;height:28px;border-radius:8px;background:var(--accent);
+    display:grid;place-items:center;color:#fff;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.18);
+  }
+  .brand-mark svg{width:16px;height:16px}
+  .brand-name{font-size:14px}
+  .brand-name em{font-style:normal;color:var(--ink-3);font-weight:500;margin-left:6px}
+
+  .topbar-right{display:flex;align-items:center;gap:8px}
+  .company-pill{
+    display:flex;align-items:center;gap:10px;padding:6px 10px 6px 6px;border-radius:999px;
+    border:1px solid var(--line);background:var(--surface);cursor:pointer;
+    transition:background .15s ease, border-color .15s ease;
+  }
+  .company-pill:hover{background:var(--line-2)}
+  .company-avatar{
+    width:24px;height:24px;border-radius:8px;background:linear-gradient(135deg,#6366F1,#8B5CF6);
+    color:#fff;display:grid;place-items:center;font-size:11px;font-weight:600;letter-spacing:.02em;
+  }
+  .company-name{font-size:13px;font-weight:500;color:var(--ink)}
+  .chev{color:var(--ink-3)}
+  .icon-btn{
+    width:36px;height:36px;border-radius:10px;border:1px solid transparent;background:transparent;
+    display:grid;place-items:center;cursor:pointer;color:var(--ink-2);
+  }
+  .icon-btn:hover{background:var(--line-2);color:var(--ink)}
+  .user-avatar{
+    width:32px;height:32px;border-radius:999px;background:#E4E4E7;color:#52525B;
+    display:grid;place-items:center;font-size:12px;font-weight:600;
+  }
+  [data-theme="dark"] .user-avatar{background:#27272A;color:#D4D4D8}
+
+  .page{flex:1;padding:56px 32px 80px;max-width:1200px;width:100%;margin:0 auto}
+  .page-head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:40px}
+  .h-greet{font-family:var(--font-display);font-weight:400;font-size:48px;line-height:1.05;letter-spacing:-0.02em;margin:0 0 8px}
+  .h-greet i{font-style:italic;color:var(--ink-3)}
+  .h-sub{color:var(--ink-3);font-size:15px;margin:0;max-width:560px;line-height:1.5}
+  .h-sub b{color:var(--ink-2);font-weight:600}
+  .head-actions{display:flex;gap:8px;align-items:center}
+
+  /* ------- Buttons ------- */
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;height:38px;padding:0 14px;
+    border-radius:10px;border:1px solid var(--line);background:var(--surface);
+    font-size:13px;font-weight:500;color:var(--ink);cursor:pointer;
+    transition:background .15s, border-color .15s, transform .05s;
+  }
+  .btn:hover{background:var(--line-2)}
+  .btn:active{transform:translateY(1px)}
+  .btn-primary{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+  .btn-primary:hover{background:var(--ink-2);border-color:var(--ink-2)}
+  [data-theme="dark"] .btn-primary{background:var(--ink);color:#0E0E10}
+  .btn-accent{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .btn-accent:hover{filter:brightness(1.05)}
+
+  /* ------- Section bar ------- */
+  .section-bar{
+    display:flex;align-items:center;justify-content:space-between;gap:16px;
+    margin: 8px 0 16px;
+  }
+  .section-title{font-size:13px;font-weight:600;color:var(--ink-2);letter-spacing:.02em;text-transform:uppercase}
+  .section-meta{font-size:12px;color:var(--ink-3);font-family:var(--font-mono)}
+
+  .filters{display:flex;gap:6px;align-items:center}
+  .chip{
+    height:30px;padding:0 12px;border-radius:999px;border:1px solid var(--line);
+    background:transparent;font-size:12.5px;color:var(--ink-2);cursor:pointer;
+    display:inline-flex;align-items:center;gap:6px;
+  }
+  .chip:hover{background:var(--line-2)}
+  .chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+  [data-theme="dark"] .chip[aria-pressed="true"]{color:#0E0E10}
+  .chip .count{color:var(--ink-3);font-family:var(--font-mono);font-size:11px}
+  .chip[aria-pressed="true"] .count{color:var(--bg);opacity:.7}
+
+  /* ------- Project grid ------- */
+  .grid{
+    display:grid;grid-template-columns:repeat(3, 1fr);gap:20px;
+  }
+  @media (max-width: 980px){ .grid{grid-template-columns:repeat(2,1fr)} }
+  @media (max-width: 640px){ .grid{grid-template-columns:1fr} }
+
+  .card{
+    position:relative;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-lg);
+    padding:24px;display:flex;flex-direction:column;gap:18px;cursor:pointer;
+    transition: border-color .15s ease, transform .15s ease, box-shadow .2s ease;
+  }
+  .card:hover{border-color:#D4D4D8;box-shadow:var(--shadow-md);transform:translateY(-1px)}
+  [data-theme="dark"] .card:hover{border-color:#3F3F46}
+
+  .card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+  .card-eyebrow{
+    font-family:var(--font-mono);font-size:11px;color:var(--ink-3);letter-spacing:.06em;
+    text-transform:uppercase;margin-bottom:6px;display:flex;align-items:center;gap:8px;
+  }
+  .card-eyebrow .dot{width:5px;height:5px;border-radius:999px;background:var(--ink-3)}
+  .card-name{font-size:18px;font-weight:600;letter-spacing:-0.01em;line-height:1.3;margin:0;color:var(--ink)}
+  .card-desc{font-size:13.5px;color:var(--ink-3);line-height:1.5;margin:6px 0 0}
+
+  .badge{
+    display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 10px;border-radius:999px;
+    font-size:11.5px;font-weight:500;border:1px solid var(--line);background:var(--surface);color:var(--ink-2);
+    flex-shrink:0;
+  }
+  .badge .dot{width:6px;height:6px;border-radius:999px;background:var(--ink-3)}
+  .badge.ok{color:#15803D;border-color:#BBF7D0;background:#F0FDF4}
+  .badge.ok .dot{background:#16A34A}
+  .badge.warn{color:#B45309;border-color:#FED7AA;background:#FFFBEB}
+  .badge.warn .dot{background:#D97706}
+  .badge.hold{color:#3F3F46;border-color:#E4E4E7;background:#FAFAFA}
+  [data-theme="dark"] .badge.ok{color:#86EFAC;background:#052E16;border-color:#14532D}
+  [data-theme="dark"] .badge.warn{color:#FCD34D;background:#451A03;border-color:#78350F}
+  [data-theme="dark"] .badge.hold{color:#A1A1AA;background:#18181B;border-color:#27272A}
+
+  .meters{display:flex;gap:18px;align-items:center;color:var(--ink-3);font-size:12.5px}
+  .meter{display:flex;align-items:center;gap:6px}
+  .meter b{color:var(--ink-2);font-weight:600;font-variant-numeric:tabular-nums}
+  .progress{height:4px;background:var(--line-2);border-radius:999px;overflow:hidden}
+  .progress > span{display:block;height:100%;background:var(--accent);border-radius:999px}
+
+  .avatars{display:flex}
+  .avatars > span{
+    width:22px;height:22px;border-radius:999px;border:2px solid var(--surface);
+    background:#E4E4E7;color:#52525B;display:grid;place-items:center;font-size:10px;font-weight:600;
+    margin-left:-6px;
+  }
+  .avatars > span:first-child{margin-left:0}
+  [data-theme="dark"] .avatars > span{background:#27272A;color:#D4D4D8}
+
+  .card-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-top:16px;border-top:1px dashed var(--line)}
+
+  /* AI Inbox card variant */
+  .card.ai{
+    background: linear-gradient(180deg, var(--accent-soft) 0%, var(--surface) 60%);
+    border-color: color-mix(in oklab, var(--accent) 18%, var(--line));
+  }
+  [data-theme="dark"] .card.ai{
+    background: linear-gradient(180deg, color-mix(in oklab, var(--accent) 22%, var(--surface)) 0%, var(--surface) 70%);
+  }
+  .ai-eyebrow{color:var(--accent-ink) !important}
+  .ai-eyebrow .dot{background:var(--accent) !important}
+  .ai-list{display:flex;flex-direction:column;gap:8px}
+  .ai-item{
+    display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border-radius:10px;
+    background: color-mix(in oklab, var(--surface) 70%, transparent);
+    border:1px solid color-mix(in oklab, var(--accent) 14%, var(--line));
+    font-size:13px;color:var(--ink-2);line-height:1.4;
+  }
+  .ai-tag{
+    flex-shrink:0;font-family:var(--font-mono);font-size:10.5px;font-weight:500;
+    text-transform:uppercase;padding:2px 6px;border-radius:5px;letter-spacing:.04em;
+    background: color-mix(in oklab, var(--accent) 12%, transparent);color: var(--accent-ink);
+  }
+  .ai-input{
+    display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;
+    background:var(--surface);border:1px solid var(--line);
+    color:var(--ink-3);font-size:13px;cursor:text;
+  }
+  .ai-input svg{flex-shrink:0;color:var(--accent)}
+
+  /* New project card */
+  .card.new{
+    border-style:dashed;background:transparent;align-items:center;justify-content:center;
+    text-align:center;color:var(--ink-3);min-height:100%;
+  }
+  .card.new:hover{border-color:var(--accent);color:var(--accent)}
+  .card.new .plus{
+    width:40px;height:40px;border-radius:12px;background:var(--line-2);
+    display:grid;place-items:center;color:var(--ink-2);margin-bottom:6px;
+    transition: background .15s, color .15s;
+  }
+  .card.new:hover .plus{background:var(--accent-soft);color:var(--accent)}
+
+  /* ------- LOGIN ------- */
+  .login{min-height:100vh;display:grid;grid-template-columns: 1.1fr 1fr;background:var(--bg)}
+  @media (max-width: 880px){ .login{grid-template-columns:1fr} .login-visual{display:none} }
+  .login-visual{
+    position:relative;background:var(--ink);color:var(--bg);overflow:hidden;
+    padding:48px;display:flex;flex-direction:column;justify-content:space-between;
+  }
+  [data-theme="dark"] .login-visual{background:#08080A}
+  .login-visual::before{
+    content:"";position:absolute;inset:0;
+    background:
+      radial-gradient(60% 50% at 20% 10%, color-mix(in oklab, var(--accent) 60%, transparent) 0%, transparent 60%),
+      radial-gradient(50% 40% at 90% 90%, color-mix(in oklab, var(--accent) 35%, transparent) 0%, transparent 60%);
+    opacity:.55;pointer-events:none;
+  }
+  .login-visual::after{
+    content:"";position:absolute;inset:0;
+    background-image:
+      linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+    background-size: 32px 32px;mask-image: linear-gradient(180deg, black, transparent 80%);
+    pointer-events:none;
+  }
+  .login-visual > *{position:relative;z-index:1}
+  .lv-brand{display:flex;align-items:center;gap:10px;font-size:14px;font-weight:500}
+  .lv-brand .brand-mark{background:var(--accent)}
+  .lv-pitch h1{
+    font-family:var(--font-display);font-weight:400;font-size:56px;line-height:1.05;letter-spacing:-0.02em;margin:0 0 16px;
+    max-width:520px;
+  }
+  .lv-pitch h1 i{font-style:italic;color: color-mix(in oklab, var(--bg) 75%, var(--accent))}
+  .lv-pitch p{color: rgba(255,255,255,.65);font-size:15.5px;line-height:1.55;max-width:440px;margin:0}
+  .lv-foot{display:flex;align-items:center;gap:24px;color:rgba(255,255,255,.5);font-size:12.5px}
+  .lv-foot .pill{
+    display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;
+    background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);color:rgba(255,255,255,.8);
+  }
+  .lv-foot .pill .ok{width:6px;height:6px;border-radius:999px;background:#34D399}
+
+  .login-form-wrap{display:flex;align-items:center;justify-content:center;padding:48px 32px}
+  .login-form{width:100%;max-width:380px}
+  .login-form h2{font-family:var(--font-display);font-size:34px;font-weight:400;letter-spacing:-0.02em;margin:0 0 8px}
+  .login-form .lf-sub{color:var(--ink-3);font-size:14px;margin:0 0 32px}
+  .field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+  .field label{font-size:12.5px;font-weight:500;color:var(--ink-2)}
+  .field input{
+    height:42px;padding:0 14px;border-radius:10px;border:1px solid var(--line);
+    background:var(--surface);color:var(--ink);font:inherit;font-size:14px;outline:none;
+    transition:border-color .15s, box-shadow .15s;
+  }
+  .field input:focus{border-color:var(--accent);box-shadow:0 0 0 4px color-mix(in oklab, var(--accent) 15%, transparent)}
+  .field-row{display:flex;align-items:center;justify-content:space-between;font-size:12.5px;margin:6px 0 20px}
+  .field-row a{color:var(--accent);font-weight:500}
+  .check{display:inline-flex;align-items:center;gap:8px;color:var(--ink-3);cursor:pointer;user-select:none}
+  .check input{appearance:none;width:16px;height:16px;border-radius:5px;border:1.5px solid var(--line);background:var(--surface);display:grid;place-items:center}
+  .check input:checked{background:var(--accent);border-color:var(--accent)}
+  .check input:checked::after{content:"";width:8px;height:8px;background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='2,6 5,9 10,3'/></svg>") center/contain no-repeat}
+  .submit{width:100%;height:44px;font-size:14px;font-weight:500;border-radius:10px;border:1px solid var(--ink);background:var(--ink);color:var(--bg);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
+  [data-theme="dark"] .submit{background:var(--ink);color:#0E0E10}
+  .submit:hover{filter:brightness(1.05)}
+  .or{display:flex;align-items:center;gap:12px;color:var(--ink-3);font-size:12px;margin:20px 0}
+  .or::before,.or::after{content:"";height:1px;background:var(--line);flex:1}
+  .sso{
+    display:flex;gap:8px;
+  }
+  .sso .btn{flex:1;justify-content:center;height:42px}
+  .lf-foot{margin-top:28px;text-align:center;color:var(--ink-3);font-size:13px}
+  .lf-foot a{color:var(--ink);font-weight:500;border-bottom:1px solid var(--line)}
+
+  /* Tweaks panel */
+  .tweaks{
+    position:fixed;right:20px;bottom:20px;z-index:50;width:280px;
+    background:var(--surface);border:1px solid var(--line);border-radius:16px;
+    box-shadow: var(--shadow-md);overflow:hidden;
+  }
+  .tweaks-head{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--line)}
+  .tweaks-head h4{margin:0;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2)}
+  .tweaks-body{padding:14px;display:flex;flex-direction:column;gap:14px}
+  .tw-row{display:flex;flex-direction:column;gap:6px}
+  .tw-label{font-size:11.5px;font-weight:500;color:var(--ink-3);text-transform:uppercase;letter-spacing:.04em}
+  .tw-options{display:flex;gap:6px;flex-wrap:wrap}
+  .tw-opt{
+    height:28px;padding:0 10px;border-radius:8px;border:1px solid var(--line);
+    background:transparent;font-size:12px;color:var(--ink-2);cursor:pointer;
+  }
+  .tw-opt[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+  [data-theme="dark"] .tw-opt[aria-pressed="true"]{color:#0E0E10}
+  .tw-swatches{display:flex;gap:8px}
+  .tw-sw{width:24px;height:24px;border-radius:8px;border:2px solid transparent;cursor:pointer;outline:1px solid var(--line)}
+  .tw-sw[aria-pressed="true"]{border-color:var(--ink)}
+
+  /* Demo bar */
+  .demobar{
+    display:flex;gap:6px;padding:6px;border-radius:999px;background:var(--surface);
+    border:1px solid var(--line);position:fixed;left:50%;top:20px;transform:translateX(-50%);z-index:40;
+    box-shadow: var(--shadow-sm);
+  }
+  .demobar button{
+    height:30px;padding:0 14px;border-radius:999px;border:none;background:transparent;
+    font-size:12.5px;font-weight:500;color:var(--ink-2);cursor:pointer;
+  }
+  .demobar button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+  [data-theme="dark"] .demobar button[aria-pressed="true"]{color:#0E0E10}
+
+  /* fade transition */
+  .view{animation: fade .35s ease both}
+  @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" data-presets="react">
+const { useState, useEffect } = React;
+
+/* ---------- icons ---------- */
+const I = {
+  brain: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M9 5a3 3 0 0 0-3 3v0a3 3 0 0 0-2 5v0a3 3 0 0 0 2 5v0a3 3 0 0 0 3 3"/><path d="M15 5a3 3 0 0 1 3 3v0a3 3 0 0 1 2 5v0a3 3 0 0 1-2 5v0a3 3 0 0 1-3 3"/><path d="M12 5v14"/></svg>,
+  search: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>,
+  bell: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10 21a2 2 0 0 0 4 0"/></svg>,
+  chev: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"/></svg>,
+  plus: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 5v14M5 12h14"/></svg>,
+  arrow: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>,
+  spark: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M5.6 18.4l2.8-2.8M15.6 8.4l2.8-2.8"/></svg>,
+  google: <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>,
+};
+
+/* ---------- demo data ---------- */
+const PROJECTS = [
+  { code:'P1', name:'Mobile App Relaunch',  status:'In Progress', members:['AT','MR','JK','LP','SA'], tasks:24, done:11, knowledge:18, desc:'Modernize the iOS & Android apps. Ship the new onboarding by Q3.' },
+  { code:'P2', name:'Onboarding Revamp',    status:'Planning',    members:['SA','LP','JK'],         tasks:12, done:2,  knowledge:7,  desc:'Reduce day-1 drop-off. Rework the first three sessions end-to-end.' },
+  { code:'P3', name:'Pricing Page V2',      status:'In Progress', members:['MR','AT','JK','SA'],    tasks:9,  done:6,  knowledge:11, desc:'New positioning, clearer plans, calculator for self-serve.' },
+  { code:'P4', name:'Customer Research',    status:'On Hold',     members:['LP','SA'],              tasks:5,  done:1,  knowledge:24, desc:'Synthesize 12 interviews from EU mid-market into clear themes.' },
+  { code:'P5', name:'Internal Tooling',     status:'In Progress', members:['JK','MR','AT'],         tasks:17, done:9,  knowledge:5,  desc:'Replace the spreadsheets ops uses for handoffs and approvals.' },
+];
+const INBOX = [
+  { tag:'task',  text:'Re-check auth flow before pricing rollout' },
+  { tag:'idea',  text:'Status traffic-lights on the dashboard hover' },
+  { tag:'risk',  text:'API may slow down once we ingest meeting notes' },
+];
+
+/* ---------- helpers ---------- */
+const statusClass = (s) => s === 'In Progress' ? 'ok' : s === 'Planning' ? 'warn' : 'hold';
+
+/* ---------- Topbar ---------- */
+function Topbar({ onLogout }){
+  return (
+    <header className="topbar">
+      <div className="brand">
+        <span className="brand-mark">{I.brain}</span>
+        <span className="brand-name">ProjectBrain <em>AI</em></span>
+      </div>
+      <div className="topbar-right">
+        <button className="icon-btn" aria-label="Search">{I.search}</button>
+        <button className="icon-btn" aria-label="Notifications">{I.bell}</button>
+        <button className="company-pill">
+          <span className="company-avatar">DA</span>
+          <span className="company-name">Demo Company A</span>
+          <span className="chev">{I.chev}</span>
+        </button>
+        <span className="user-avatar" onClick={onLogout} title="Logout">TR</span>
+      </div>
+    </header>
+  );
+}
+
+/* ---------- Project card ---------- */
+function ProjectCard({ p }){
+  const pct = Math.round((p.done / p.tasks) * 100);
+  return (
+    <div className="card" role="button" tabIndex={0}>
+      <div className="card-head">
+        <div>
+          <div className="card-eyebrow"><span className="dot"></span>{p.code} · {p.members.length} members</div>
+          <h3 className="card-name">{p.name}</h3>
+          <p className="card-desc">{p.desc}</p>
+        </div>
+        <span className={`badge ${statusClass(p.status)}`}><span className="dot"></span>{p.status}</span>
+      </div>
+
+      <div>
+        <div className="meters" style={{justifyContent:'space-between',marginBottom:8}}>
+          <span className="meter"><b>{p.done}</b>/{p.tasks} tasks</span>
+          <span className="meter" style={{fontVariantNumeric:'tabular-nums'}}>{pct}%</span>
+        </div>
+        <div className="progress"><span style={{width:`${pct}%`}}></span></div>
+      </div>
+
+      <div className="card-foot">
+        <div className="avatars">
+          {p.members.slice(0,4).map((m,i)=>(<span key={i}>{m}</span>))}
+          {p.members.length > 4 && <span style={{background:'transparent',color:'var(--ink-3)'}}>+{p.members.length-4}</span>}
+        </div>
+        <span className="meter" style={{color:'var(--ink-3)',fontSize:12}}>{p.knowledge} notes</span>
+      </div>
+    </div>
+  );
+}
+
+/* ---------- AI Inbox card ---------- */
+function AIInboxCard(){
+  return (
+    <div className="card ai" role="button" tabIndex={0}>
+      <div className="card-head">
+        <div>
+          <div className="card-eyebrow ai-eyebrow"><span className="dot"></span>AI INBOX · {INBOX.length} pending</div>
+          <h3 className="card-name">Capture anything</h3>
+          <p className="card-desc">Quick thoughts, ideas, risks — sorted into the right project automatically.</p>
+        </div>
+        <span className="badge" style={{borderColor:'transparent',background:'transparent',color:'var(--accent)'}}>{I.spark}</span>
+      </div>
+
+      <div className="ai-list">
+        {INBOX.map((m, i) => (
+          <div className="ai-item" key={i}>
+            <span className="ai-tag">{m.tag}</span>
+            <span>{m.text}</span>
+          </div>
+        ))}
+      </div>
+
+      <div className="ai-input">
+        {I.spark}
+        <span>Capture a thought…</span>
+      </div>
+    </div>
+  );
+}
+
+/* ---------- Dashboard ---------- */
+function Dashboard({ onLogout }){
+  const [filter, setFilter] = useState('All');
+  const filters = [
+    { k:'All', n: PROJECTS.length },
+    { k:'In Progress', n: PROJECTS.filter(p=>p.status==='In Progress').length },
+    { k:'Planning',    n: PROJECTS.filter(p=>p.status==='Planning').length },
+    { k:'On Hold',     n: PROJECTS.filter(p=>p.status==='On Hold').length },
+  ];
+  const visible = filter === 'All' ? PROJECTS : PROJECTS.filter(p=>p.status===filter);
+
+  return (
+    <div className="app view">
+      <Topbar onLogout={onLogout} />
+      <main className="page">
+        <div className="page-head">
+          <div>
+            <h1 className="h-greet">Good morning, Tobias <i>—</i></h1>
+            <p className="h-sub">You're in <b>Demo Company A</b>. {visible.length} projects, {INBOX.length} new items in your AI Inbox.</p>
+          </div>
+          <div className="head-actions">
+            <button className="btn">Invite</button>
+            <button className="btn btn-primary">{I.plus} New project</button>
+          </div>
+        </div>
+
+        <div className="section-bar">
+          <div className="filters">
+            {filters.map(f => (
+              <button key={f.k} className="chip" aria-pressed={filter===f.k} onClick={()=>setFilter(f.k)}>
+                {f.k} <span className="count">{f.n}</span>
+              </button>
+            ))}
+          </div>
+          <span className="section-meta">Updated 2m ago</span>
+        </div>
+
+        <div className="grid">
+          <AIInboxCard />
+          {visible.map(p => <ProjectCard key={p.code} p={p} />)}
+          <div className="card new" role="button" tabIndex={0}>
+            <span className="plus">{I.plus}</span>
+            <strong style={{color:'var(--ink-2)',fontWeight:500,fontSize:14}}>New project</strong>
+            <span style={{fontSize:12.5,marginTop:4}}>Start from blank or a template</span>
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+}
+
+/* ---------- Login ---------- */
+function Login({ onSubmit }){
+  return (
+    <div className="login view">
+      <aside className="login-visual">
+        <div className="lv-brand">
+          <span className="brand-mark">{I.brain}</span>
+          ProjectBrain <em style={{opacity:.6,marginLeft:4,fontStyle:'normal'}}>AI</em>
+        </div>
+        <div className="lv-pitch">
+          <h1>Your team's <i>second brain</i> for every project.</h1>
+          <p>Projects, knowledge, and decisions in one calm place — with an AI that already knows the context.</p>
+        </div>
+        <div className="lv-foot">
+          <span className="pill"><span className="ok"></span>SOC 2 in progress</span>
+          <span>v0.4 · build 218</span>
+        </div>
+      </aside>
+
+      <section className="login-form-wrap">
+        <form className="login-form" onSubmit={(e)=>{e.preventDefault();onSubmit()}}>
+          <h2>Welcome back</h2>
+          <p className="lf-sub">Sign in to continue to your workspace.</p>
+
+          <div className="field">
+            <label htmlFor="email">Email</label>
+            <input id="email" type="email" defaultValue="tobias@projectbrain.ai" />
+          </div>
+          <div className="field">
+            <label htmlFor="pw">Password</label>
+            <input id="pw" type="password" defaultValue="••••••••••" />
+          </div>
+
+          <div className="field-row">
+            <label className="check"><input type="checkbox" defaultChecked /> Remember me</label>
+            <a href="#">Forgot password?</a>
+          </div>
+
+          <button className="submit" type="submit">Sign in {I.arrow}</button>
+
+          <div className="or">or continue with</div>
+          <div className="sso">
+            <button type="button" className="btn">{I.google} Google</button>
+            <button type="button" className="btn">SSO</button>
+          </div>
+
+          <p className="lf-foot">No account yet? <a href="#">Request access</a></p>
+        </form>
+      </section>
+    </div>
+  );
+}
+
+/* ---------- Tweaks ---------- */
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "theme": "light",
+  "accent": "amber",
+  "font": "inter"
+}/*EDITMODE-END*/;
+
+const ACCENTS = {
+  indigo:    { c:'#4F46E5', soft:'#EEF2FF', ink:'#312E81' },
+  violet:    { c:'#7C3AED', soft:'#F3E8FF', ink:'#4C1D95' },
+  emerald:   { c:'#059669', soft:'#ECFDF5', ink:'#064E3B' },
+  amber:     { c:'#D97706', soft:'#FFFBEB', ink:'#78350F' },
+  graphite:  { c:'#27272A', soft:'#F4F4F5', ink:'#18181B' },
+};
+const FONTS = {
+  geist:    { sans:"'Geist', 'Inter', system-ui, sans-serif",      display:"'Instrument Serif', serif" },
+  inter:    { sans:"'Inter', system-ui, sans-serif",                display:"'Inter', system-ui, sans-serif" },
+  serif:    { sans:"'Inter', system-ui, sans-serif",                display:"'Instrument Serif', serif" },
+};
+
+function Tweaks({ tw, setTw, open, setOpen }){
+  if(!open) return null;
+  const set = (patch) => {
+    const next = { ...tw, ...patch };
+    setTw(next);
+    window.parent?.postMessage({type:'__edit_mode_set_keys', edits: patch}, '*');
+  };
+  return (
+    <aside className="tweaks">
+      <div className="tweaks-head">
+        <h4>Tweaks</h4>
+        <button className="icon-btn" onClick={()=>{setOpen(false); window.parent?.postMessage({type:'__edit_mode_dismissed'}, '*')}} aria-label="Close" style={{width:24,height:24}}>✕</button>
+      </div>
+      <div className="tweaks-body">
+        <div className="tw-row">
+          <span className="tw-label">Theme</span>
+          <div className="tw-options">
+            {['light','dark'].map(t => (
+              <button key={t} className="tw-opt" aria-pressed={tw.theme===t} onClick={()=>set({theme:t})}>{t}</button>
+            ))}
+          </div>
+        </div>
+        <div className="tw-row">
+          <span className="tw-label">Accent</span>
+          <div className="tw-swatches">
+            {Object.entries(ACCENTS).map(([k,v]) => (
+              <button key={k} className="tw-sw" aria-pressed={tw.accent===k} onClick={()=>set({accent:k})} style={{background:v.c}} title={k} />
+            ))}
+          </div>
+        </div>
+        <div className="tw-row">
+          <span className="tw-label">Type</span>
+          <div className="tw-options">
+            {Object.keys(FONTS).map(f => (
+              <button key={f} className="tw-opt" aria-pressed={tw.font===f} onClick={()=>set({font:f})}>{f}</button>
+            ))}
+          </div>
+        </div>
+      </div>
+    </aside>
+  );
+}
+
+/* ---------- Root ---------- */
+function App(){
+  const [view, setView] = useState('login');  // 'login' | 'dashboard'
+  const [tw, setTw] = useState(TWEAK_DEFAULTS);
+  const [tweaksOpen, setTweaksOpen] = useState(false);
+
+  // apply tweak vars
+  useEffect(() => {
+    const root = document.documentElement;
+    root.setAttribute('data-theme', tw.theme);
+    const a = ACCENTS[tw.accent] || ACCENTS.indigo;
+    root.style.setProperty('--accent', a.c);
+    root.style.setProperty('--accent-soft', a.soft);
+    root.style.setProperty('--accent-ink', a.ink);
+    const f = FONTS[tw.font] || FONTS.geist;
+    root.style.setProperty('--font-sans', f.sans);
+    root.style.setProperty('--font-display', f.display);
+  }, [tw]);
+
+  // edit-mode protocol
+  useEffect(() => {
+    const onMsg = (e) => {
+      const d = e.data || {};
+      if (d.type === '__activate_edit_mode') setTweaksOpen(true);
+      else if (d.type === '__deactivate_edit_mode') setTweaksOpen(false);
+    };
+    window.addEventListener('message', onMsg);
+    window.parent?.postMessage({type:'__edit_mode_available'}, '*');
+    return () => window.removeEventListener('message', onMsg);
+  }, []);
+
+  return (
+    <>
+      <nav className="demobar" aria-label="Demo navigation">
+        <button aria-pressed={view==='login'} onClick={()=>setView('login')}>Login</button>
+        <button aria-pressed={view==='dashboard'} onClick={()=>setView('dashboard')}>Dashboard</button>
+      </nav>
+
+      {view === 'login'
+        ? <Login onSubmit={()=>setView('dashboard')} />
+        : <Dashboard onLogout={()=>setView('login')} />}
+
+      <Tweaks tw={tw} setTw={setTw} open={tweaksOpen} setOpen={setTweaksOpen} />
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

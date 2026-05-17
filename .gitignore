@@ -44,3 +44,7 @@ npm-debug.log*
 
 # Test / coverage
 /coverage
+
+# AI tool configs                                                                                                                                                                                                                           
+.claude/                                                                                                                                                                                                                                    
+.codex/ 

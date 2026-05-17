@@ -4,19 +4,20 @@ Diese Datei wird nach festen Triggern aktualisiert, damit wir jederzeit nahtlos 
 
 ## Naechste Session — **zuerst**
 
-1. **GitHub-Repository** anlegen (leer oder mit README).
-2. Lokalen Stand verbinden und **hochladen**: `git init` falls noch nicht, `.gitignore` prüfen, `git remote add origin …`, erster Commit, `git push -u origin main` (oder `master`).
-3. Danach wie geplant: **Auth + Tenancy** ([plan-auth-tenancy.md](plan-auth-tenancy.md)).
+1. **Auth/Tenancy-Modelle korrigieren**: Tippfehler und falsche Associations in `User` und `Company` beheben.
+2. **Routing mit Auth-Namespace abgleichen**: `config/routes.rb` auf `Auth::SessionsController` und `Auth::PasswordsController` ausrichten.
+3. **Magic-Link-Flow entscheiden**: Entweder sauber weiterbauen oder bis spaeter klar als "geplant, nicht integriert" markieren.
 
 ## Current
 
-- Current Step: `Step 01 - Foundation`
-- Current Task: `Auth + Tenancy laut docs/plan-auth-tenancy.md (Registrierung, Login, Company, Membership role owner)`
+- Current Step: `Step 02 - Auth + Tenancy`
+- Current Task: `Auth-Basis steht; Implementierung mit Plan abgleichen`
 - State: `in_progress`
 
 ## Done Today
 
 - [x] Status-System eingerichtet
+- [x] Auth- und Tenancy-Stand gegen das Repo abgeglichen
 
 ## Next 2 Actions
 
@@ -42,10 +43,18 @@ Diese Datei wird nach festen Triggern aktualisiert, damit wir jederzeit nahtlos 
 - [x] Dashboard UI: weisser Hintergrund + Grid Cards
 - [x] Globale Theme-Tokens: `app/javascript/styles/_theme.scss` (`:root` / `--pb-*` fuer spaeteres Tenant-Branding)
 - [x] `ProjectCard`: Status-Badge oben rechts neben Titel; Chat-Input unten (UI only; RAG/Navigation spaeter)
+- [x] Rails 8 Auth-Grundlagen im Repo: `User`, `Session`, `Current`, `Authentication`-Concern
+- [x] Auth-Controller unter `app/controllers/auth/`: `Auth::SessionsController`, `Auth::PasswordsController`
+- [x] Migration `CreateMagicLinks` vorhanden und in `db/schema.rb` sichtbar
+- [x] Modelle `Company`, `Membership`, `MagicLink` angelegt
 
 ## Blockers / Questions
 
-- Keine, Lernmodus aktiv (User tippt selbst)
+- Kein harter Blocker, aber der aktuelle Stand ist technisch nicht voll synchron:
+- `config/routes.rb` zeigt noch nicht sauber auf den `auth/` Namespace.
+- `User` und `Company` haben derzeit fehlerhafte Association-/Validation-Schreibweisen.
+- `Membership` kennt aktuell `owner`, `admin`, `user`, aber noch kein `projectmanager`.
+- Magic-Link-Datenmodell existiert, der eigentliche Login-Flow dazu noch nicht.
 
 ## Session Notes
 
@@ -57,9 +66,19 @@ Diese Datei wird nach festen Triggern aktualisiert, damit wir jederzeit nahtlos 
   - Pro Company **genau ein** Owner; Owner **nicht** per normalem Team-Remove löschbar.
   - Admin-Panel / Company-Settings: Abfragen **immer pro Company**; typisch Zugriff für **`owner` oder `admin`**.
   - Auth: Rails 8 **authentication**-Generator (kein Devise in V1).
+  - Generator-Passwort-Reset liegt bereits im Repo; Magic-Link-Login ist davon getrennt und noch nicht verdrahtet.
 
 ## Update Log
 
+- 2026-05-03: SCSS Cleanup: `_theme.scss` geleert (Tokens auf später verschoben), alle `var(--pb-*)` hardcoded, Dead CSS entfernt (will-change, min-height, margin-top, box-shadow)
+- 2026-05-03: Auto-Formatting eingerichtet: Claude Code PostToolUse Hook (prettier/rubocop) + VS Code settings (Ruby LSP, Prettier)
+- 2026-05-03: Auth-Plan erstellt: `docs/superpowers/plans/2026-05-03-auth-tenancy.md` (21 Tasks)
+- 2026-05-03: Task 1 done — Rails 8 Auth Generator ausgeführt (User, Session, Current, Authentication Concern)
+- 2026-05-03: Auth-Controller in `auth/` Namespace verschoben: `Auth::SessionsController`, `Auth::PasswordsController`
+- 2026-05-03: Task 2 done — Company Migration geschrieben (name, slug, unique index)
+- 2026-05-03: Task 3 done — Memberships Migration geschrieben (user_id, company_id, role, partial unique index für owner)
+- 2026-05-17: Doku-Abgleich gemacht — Migrationen fuer `users`, `sessions`, `companies`, `memberships`, `magic_links` sind im Schema vorhanden
+- 2026-05-17: Doku-Abgleich gemacht — Auth-Controller liegen unter `app/controllers/auth/`; Routes und Modelle brauchen noch Sync
 - 2026-05-02: Datei erstellt, Tracking gestartet
 - 2026-05-02: Step 01 aktiv gestartet, Status auf in_progress gesetzt
 - 2026-05-02: Auf User-Wunsch auf reinen Lernmodus umgestellt (keine Commands durch Assistant)

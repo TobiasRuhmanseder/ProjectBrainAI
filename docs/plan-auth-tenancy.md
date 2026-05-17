@@ -1,16 +1,19 @@
-# Auth & Tenancy — geplante Umsetzung (nach Brainstorming)
+# Auth & Tenancy — Plan und aktueller Stand
 
-Diese Datei fasst die **fachlichen und technischen Festlegungen** zusammen, bevor wir Registrierung/Login und Company-Kontext implementieren.
+Diese Datei fasst die **fachlichen und technischen Festlegungen** zusammen und markiert, was davon im Repo bereits vorhanden ist.
 
 ## Auth
 
 - **Rails 8 Auth-Generator** (`bin/rails g authentication`) — Code im Repo, gut zum Lernen; in echten Projekten üblich (alternativ oft Devise).
+- **Aktueller Stand:** Passwort-Login und Passwort-Reset-Controller aus dem Generator liegen bereits unter `app/controllers/auth/`.
+- **Noch offen:** Routing sauber auf den `auth/` Namespace ziehen und die Sign-In-UI mit dem aktuellen Flow verbinden.
 
 ## Datenmodell (Kern)
 
 - **`User`**: Login-Identity (E-Mail, Passwort, …).
 - **`Company`**: z. B. `name`, `slug` (unique).
 - **`Membership`**: `user_id`, `company_id`, `role` — **eine Zeile pro User pro Company**.
+- **`MagicLink`**: `user_id`, `token`, `expires_at` — Tabelle und Modell sind bereits angelegt.
 
 ## Rollen auf `memberships.role`
 
@@ -19,6 +22,17 @@ Diese Datei fasst die **fachlichen und technischen Festlegungen** zusammen, bevo
 - **`projectmanager`**, **`user`** — wie in [conzept.md](conzept.md).
 
 Derselbe **User** kann in **mehreren Companies** unterschiedliche Rollen haben (z. B. `owner` in A, `user` in B) — jeweils eigene `Membership`-Zeile.
+
+## Implementierungsstand im Repo
+
+- **Vorhanden:** Migrationen fuer `users`, `sessions`, `companies`, `memberships`, `magic_links`.
+- **Vorhanden:** Modelle `Company`, `Membership`, `MagicLink`, `Session`, `Current`, `User`.
+- **Vorhanden:** DB-Constraint fuer genau einen `owner` pro Company ueber partiellen Unique-Index.
+- **Vorhanden:** Generator-Flow fuer Passwort-Reset.
+- **Noch nicht fertig:** Registrierung mit `User + Company + Membership(owner)` in einer Transaktion.
+- **Noch nicht fertig:** Company-Kontext in Session oder `current_company`.
+- **Noch nicht fertig:** Magic-Link-Login per Controller, Mailer, Token-Verbrauch und UI.
+- **Inkonsistent:** `User` und `Company` haben aktuell Tippfehler in Associations/Validations; `Membership` enthaelt `projectmanager` noch nicht.
 
 ## Owner — harte Regeln
 
@@ -40,6 +54,12 @@ Kein globales `user.admin?` ohne Company-Kontext.
 - Formular: E-Mail, Passwort, Firmenname (Minimum).
 - **Eine Transaktion**: `User` anlegen → `Company` anlegen → **`Membership` mit `role: :owner`**.
 - Anschließend einloggen; Dashboard nutzt **echte** Company aus Session/Kontext (statt Mock).
+
+## Passwort-Reset vs. Magic Link
+
+- **Passwort-Reset** ist durch den Rails-Generator bereits vorbereitet.
+- **Magic-Link-Login** ist ein separater Produkt-Flow und trotz Modell/Migration noch nicht integriert.
+- Beide Flows sollten in der weiteren Umsetzung getrennt bleiben, damit Doku und Code nicht zwei verschiedene Token-Mechaniken vermischen.
 
 ## UI (optional, später)
 

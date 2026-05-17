@@ -46,7 +46,9 @@ export function ProjectCard({ project }: Props) {
         <div className={styles.content}>
           <div className={styles.headRow}>
             <h2 className={styles.title}>{project.name}</h2>
-            <span className={`${styles.badge} ${statusBadgeClass(project.status)}`}>
+            <span
+              className={`${styles.badge} ${statusBadgeClass(project.status)}`}
+            >
               {statusLabel(project.status)}
             </span>
           </div>
@@ -58,7 +60,10 @@ export function ProjectCard({ project }: Props) {
             Ask about this project
           </label>
           <div className={styles.chatField}>
-            <ChatBubbleLeftRightIcon className={styles.chatIcon} aria-hidden="true" />
+            <ChatBubbleLeftRightIcon
+              className={styles.chatIcon}
+              aria-hidden="true"
+            />
             <input
               id={chatId}
               className={styles.chatInput}

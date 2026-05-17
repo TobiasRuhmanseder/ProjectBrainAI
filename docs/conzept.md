@@ -28,7 +28,7 @@ Ein User kann mehreren Companies angehören und dort unterschiedliche Rollen hab
 Beispiel:
 
 User Tobias:
-- Company A: Admin
+- Company A: Owner
 - Company B: Projectmanager
 - Company C: User
 
@@ -54,7 +54,16 @@ Ein Demo-User soll später mindestens zwei Companies besitzen, damit man das Swi
 
 ### 2. Rollenverwaltung
 
-Es gibt drei Hauptrollen auf Company-Ebene:
+Es gibt aktuell vier relevante Rollen auf Company-Ebene:
+
+#### Owner
+
+Hat die Company erstellt und ist die oberste Instanz innerhalb dieser Company.
+
+- genau ein Owner pro Company
+- kann nicht ueber den normalen Team-Flow entfernt werden
+- ist fachlich ueber `admin` eingeordnet
+- spaeter relevant fuer sensible Aktionen wie Ownership-Transfer, Billing oder Company-Loeschung
 
 #### Admin
 
